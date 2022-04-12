@@ -16,7 +16,7 @@ int init_BoardSize()
     return TMAX;
 }
 
-//Creer le tableau dynamique a 2 dimension
+//Creer le tableau dynamique a 2 dimension pour quoi? pour mettre la pierre?
 int ** init_Board(int TMAX)
 {
     int ** tab = malloc(TMAX * sizeof(int));
