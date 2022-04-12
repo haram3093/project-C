@@ -16,7 +16,7 @@ int init_BoardSize()
     return TMAX;
 }
 
-//Creer le tableau dynamique a 2 dimension pour quoi? pour mettre la pierre?
+//Creer le tableau dynamique a 2 dimension
 int ** init_Board(int TMAX)
 {
     int ** tab = malloc(TMAX * sizeof(int));
@@ -30,7 +30,7 @@ int ** init_Board(int TMAX)
     for(r = 0; r < TMAX; r++)
         for(c = 0; c < TMAX; c++)
             tab[r][c] = 0;
-    return tab; 
+    return tab;
 }
 
 //Affiche la grille de jeu
@@ -69,7 +69,7 @@ void display(int ** tab, int TMAX){
 int info_case(int ** tab, int TMAX, int x, int y){
     if(y < 0 || x < 0 || (x < 0 && y < 0) || y > TMAX - 1 || x > TMAX - 1 || (x > TMAX - 1 && y > TMAX - 1))
     {
-       return 1;
+       return -1;
     }
     else
     {
@@ -129,6 +129,14 @@ void AjoutPierre(int ** tab, int x, int y, char couleur[5])
     }
 }
 
+int checkCapture(int ** tab, int TMAX, int x, int y){
+    int nbLiberter = pierreIsoler_liberter(tab, TMAX, x, y);
+    if(nbLiberter == 0)
+    {
+        tab[x][y] = 0;
+    }
+}
+
 //Calcule le nombres de points
 int Calcule_Score(int ** tab, int TMAX){
     int r = 0;
@@ -156,6 +164,41 @@ int Calcule_Score(int ** tab, int TMAX){
 
 //Resolve les problèmes
 void Solver(int ** tab, int TMAX){
+    int r = 0;
+    int c = 0;
+
+    for(r = 0; r < TMAX; r++)
+    {
+        for(c = 0; c < TMAX; c++)
+        {
+            int piece = info_case(tab, TMAX, r, c);
+            int liberter = pierreIsoler_liberter(tab, TMAX, r, c);
+            if(piece == 1)
+            {
+                int up = info_case(tab, TMAX, r - 1, c);
+                int down = info_case(tab, TMAX, r + 1, c);
+                int right = info_case(tab, TMAX, r, c + 1);
+                int left = info_case(tab, TMAX, r, c - 1);
+                if(up == 0)
+                {
+                    tab[r - 1][c] = 2;
+                }
+                if(down == 0)
+                {
+                    tab[r + 1][c] = 2;
+                }
+                if(right == 0)
+                {
+                    tab[r][c + 1] = 2;
+                }
+                if(left == 0)
+                {
+                    tab[r][c - 1] = 2;
+                }
+                checkCapture(tab, TMAX, r, c);
+            }
+        }
+    }
 
 }
 
@@ -179,30 +222,26 @@ int pierreTriplet_liberter(int ** tab, int TMAX, int x, int y, int x2, int y2, i
 
 //Regarde/renvoie si la pierre est une pierre isolée ou non
 int checkIfPierreIsoler(int ** tab, int TMAX, int x, int y){
-    int pierre = pierreIsoler_liberter(tab, TMAX, x, y);
-    if (pierre == 4)
+    int nbLiberter = pierreIsoler_liberter(tab, TMAX, x, y);
+    if (nbLiberter == 4)
     {
         return 1;
     }
-    else
-    {
-        return 0;
-    }
-    
+    return 0;
 }
 
 //renvoie le nombre de liberter d'une pierre non isolée
 int liberterPierreNonIsoler(int ** tab, int TMAX, int x, int y){
-    int checkIsoler = checkIfPierreIsoler(tab, TMAX, x, y);
+    int checkIsolee = checkIfPierreIsoler(tab, TMAX, x, y);
     int liberter = 0;
-    if(checkIsoler == 0)
+    if(!checkIsolee)
     {
         liberter += pierreIsoler_liberter(tab, TMAX, x, y);
     }
 }
 
 //Permet la creation de problème (Je dois l'ameliorer pour qu'il soit mieux et plus simple a utiliser)
-int ProblemCreator(int ** tab, int TMAX){
+void ProblemCreator(int ** tab, int TMAX){
     int r = 0;
     int c = 0;
 
@@ -219,19 +258,38 @@ int ProblemCreator(int ** tab, int TMAX){
     }
 }
 
+// void familleConnector(int ** tab, int TMAX, int familleNoir[36], int FamilleBlanc[36]){
+//     int r = 0;
+//     int c = 0;
+//     for(r = 0; r < TMAX; r++)
+//     {
+//         for(c = 0; c < TMAX; c++)
+//         {
+//             //if()
+//         }
+//     }
+// }
+
 int main()
 {
+    // int familleNoir[36] = {0};
+    // int familleBlanc[36] = {0};
     int TMAX = init_BoardSize();
     int ** tab = init_Board(TMAX);
 
-    AjoutPierre(tab, 3, 2, "Noir");
-    AjoutPierre(tab, 2, 3, "Blanc");
+    AjoutPierre(tab, 0, 3, "Noir");
+    AjoutPierre(tab, 1, 3, "Blanc");
+    AjoutPierre(tab, 2, 3, "Noir");
+    AjoutPierre(tab, 1, 4, "Noir");
 
     //ProblemCreator(tab, TMAX);
+    //checkCapture(tab, TMAX, 1, 3);
 
     display(tab, TMAX);
-    //Calcule_Score(tab, TMAX);
-    //pierre_isoler(tab, TMAX, 2, 3);
+    Solver(tab, TMAX);
+    display(tab, TMAX);
+    Calcule_Score(tab, TMAX);
+    //pierreIsoler_liberter(tab, TMAX, 0, 0);
 
     //printf("%d", checkIfPierreIsoler(tab, TMAX, 3, 2));
 
@@ -244,3 +302,5 @@ int main()
 //Pour la question la meilleur structure de données pour ce travail est ce l'ont moi le tableau a 2 dimension (array 2d/matrice 2d) qui permet de facilement gerer et créer un tableau ainsi  que gerer les pièces du jeux
 
 // Il ma manque la question 4 et 5 du projet celle de difficulter *** et j'ai fais celle de niveau * et **
+
+
