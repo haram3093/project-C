@@ -17,15 +17,16 @@ int init_BoardSize()
 }
 
 //Creer le tableau dynamique a 2 dimension
+//Sur Linux j'ai rencontrer une erreur de segmentation lorsque je retire le + 1 de la ligne 23 et 29 du malloc alors que sur windows je n'ai pas ce problème
 int ** init_Board(int TMAX)
 {
-    int ** tab = malloc(TMAX * sizeof(int));
+    int ** tab = malloc(TMAX + 1 * sizeof(int)); //Normalement c'est malloc(TMAX * sizeof(int) mais sur linux lorsque je retire le + 1 je reçois une erreur de segmentation alors que sur mac et windows non
     int i = 0;
     int r = 0;
     int c = 0;
 
     for(i = 0; i < TMAX; i++)
-        tab[i] = malloc(TMAX * sizeof(int));
+        tab[i] = malloc(TMAX + 1 * sizeof(int)); //Normalement c'est malloc(TMAX * sizeof(int) mais sur linux lorsque je retire le + 1 je reçois une erreur de segmentation alors que sur mac et windows non
 
     for(r = 0; r < TMAX; r++)
         for(c = 0; c < TMAX; c++)
@@ -382,5 +383,7 @@ int main()
 //qui permet de facilement gerer et créer un tableau ainsi  que gerer les pièces du jeux
 
 // Il ma manque la question 5 du projet celle de difficulter ***
+
+//Sur Linux j'ai rencontrer une erreur de segmentation lorsque je retire le + 1 de la ligne 23 et 29 du malloc alors que sur windows je n'ai pas ce problème
 
 
