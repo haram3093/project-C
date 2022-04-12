@@ -359,50 +359,27 @@ void ProblemCreator(int ** tab, int TMAX){
     }
 }
 
-// void familleConnector(int ** tab, int TMAX, int familleNoir[36], int FamilleBlanc[36]){
-//     int r = 0;
-//     int c = 0;
-//     for(r = 0; r < TMAX; r++)
-//     {
-//         for(c = 0; c < TMAX; c++)
-//         {
-//             //if()
-//         }
-//     }
-// }
 
 int main()
 {
-    // int familleNoir[36] = {0};
-    // int familleBlanc[36] = {0};
     int TMAX = init_BoardSize();
     int ** tab = init_Board(TMAX);
 
-    // AjoutPierre(tab, 0, 3, "Noir");
-    // AjoutPierre(tab, 1, 3, "Blanc");
-    // AjoutPierre(tab, 2, 3, "Noir");
-    // AjoutPierre(tab, 1, 5, "Blanc");
-    // AjoutPierre(tab, 1, 4, "Noir");
-
     ProblemCreator(tab, TMAX);
-    //checkCapture(tab, TMAX, 1, 3);
 
     display(tab, TMAX);
     Solver(tab, TMAX);
     display(tab, TMAX);
 
     Calcule_Score(tab, TMAX);
-    //pierreIsoler_liberter(tab, TMAX, 0, 0);
-
-    //printf("%d", checkIfPierreIsoler(tab, TMAX, 3, 2));
-
 
     return 0;
 }
 
 
 
-//Pour la question la meilleur structure de données pour ce travail est ce l'ont moi le tableau a 2 dimension (array 2d/matrice 2d) qui permet de facilement gerer et créer un tableau ainsi  que gerer les pièces du jeux
+//Pour la question la meilleur structure de données pour ce travail est ce l'ont moi le tableau a 2 dimension (array 2d/matrice 2d) 
+//qui permet de facilement gerer et créer un tableau ainsi  que gerer les pièces du jeux
 
 // Il ma manque la question 5 du projet celle de difficulter ***
 
