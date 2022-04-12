@@ -71,10 +71,7 @@ int info_case(int ** tab, int TMAX, int x, int y){
     {
        return -1;
     }
-    else
-    {
-        return tab[x][y];
-    }
+    return tab[x][y];
 }
 
 //Check Les liberté d'une pierre et d'une pierre qui est isolée aussi
@@ -105,11 +102,11 @@ int pierreIsoler_liberter(int ** tab, int TMAX, int x, int y)
 	
 	if (piece == 1)
 	{
-		printf("La pierre Blanche a %d\n", liberter);
+		//printf("La pierre Blanche a %d\n", liberter); Fonction Test
 	}
 	if (piece == 2)
 	{
-		printf("La pierre Noir a %d\n", liberter);
+		//printf("La pierre Noir a %d\n", liberter); //Fonction test
 	}
     if (piece == 0)
     {
@@ -137,6 +134,27 @@ int checkCapture(int ** tab, int TMAX, int x, int y){
     }
 }
 
+//Calcule le nombre de pierre
+int countPierre(int ** tab, int TMAX, int couleur){
+    int r = 0;
+    int c = 0;
+    int nb = 0;
+
+    for(r = 0; r < TMAX; r++)
+    {
+        for(c = 0; c < TMAX; c++)
+        {
+            int pierre = info_case(tab, TMAX, r, c);
+            if (pierre == couleur)
+            {
+                nb += 1;
+            }
+            
+        }
+    }
+    return nb;
+}
+
 //Calcule le nombres de points
 int Calcule_Score(int ** tab, int TMAX){
     int r = 0;
@@ -158,48 +176,105 @@ int Calcule_Score(int ** tab, int TMAX){
 		}
 	}
     printf("Score Noir: %d ---- Score Blanc: %d\n", score[0], score[1]);
+    if(score[0] > score[1])
+    {
+       printf("Les Noirs ont gagner\n"); 
+    }
+    if(score[1] > score[0])
+    {
+       printf("Les Noirs ont gagner\n"); 
+    }
     return *score;
 }
 
 
-//Resolve les problèmes
+//Resolve les problèmes simple qui se gagne en 1 coup peut faire que des problèmes de 1 coup (Le programme rattrape automatiquement les coup non jouer manquant)
+//C'est a dire si l'autre pierre a des coup d'avance impossible/illégaux
 void Solver(int ** tab, int TMAX){
     int r = 0;
     int c = 0;
+    int nbNoir = countPierre(tab, TMAX, 1);
+    int nbBlanc = countPierre(tab, TMAX, 2);
 
-    for(r = 0; r < TMAX; r++)
+    if(nbNoir = nbBlanc || nbNoir < nbBlanc)
     {
-        for(c = 0; c < TMAX; c++)
+        for(r = 0; r < TMAX; r++)
         {
-            int piece = info_case(tab, TMAX, r, c);
-            int liberter = pierreIsoler_liberter(tab, TMAX, r, c);
-            if(piece == 1)
+            for(c = 0; c < TMAX; c++)
             {
-                int up = info_case(tab, TMAX, r - 1, c);
-                int down = info_case(tab, TMAX, r + 1, c);
-                int right = info_case(tab, TMAX, r, c + 1);
-                int left = info_case(tab, TMAX, r, c - 1);
-                if(up == 0)
+                int piece = info_case(tab, TMAX, r, c);
+                int liberter = pierreIsoler_liberter(tab, TMAX, r, c);
+                if(piece == 1)
                 {
-                    tab[r - 1][c] = 2;
+                    int up = info_case(tab, TMAX, r - 1, c);
+                    int down = info_case(tab, TMAX, r + 1, c);
+                    int right = info_case(tab, TMAX, r, c + 1);
+                    int left = info_case(tab, TMAX, r, c - 1);
+                    if(up == 0 && r >= 0)
+                    {
+                        tab[r - 1][c] = 2;
+                        break;
+                    }
+                    if(down == 0 && r <= TMAX)
+                    {
+                        tab[r + 1][c] = 2;
+                        break;
+                    }
+                    if(right == 0 && c <= TMAX)
+                    {
+                        tab[r][c + 1] = 2;
+                        break;
+                    }
+                    if(left == 0 && c >= 0)
+                    {
+                        tab[r][c - 1] = 2;
+                        break;
+                    }
+                    checkCapture(tab, TMAX, r, c);
                 }
-                if(down == 0)
-                {
-                    tab[r + 1][c] = 2;
-                }
-                if(right == 0)
-                {
-                    tab[r][c + 1] = 2;
-                }
-                if(left == 0)
-                {
-                    tab[r][c - 1] = 2;
-                }
-                checkCapture(tab, TMAX, r, c);
             }
         }
     }
 
+    if(nbBlanc < nbNoir)
+    {
+        for(r = 0; r < TMAX; r++)
+        {
+            for(c = 0; c < TMAX; c++)
+            {
+                int piece = info_case(tab, TMAX, r, c);
+                int liberter = pierreIsoler_liberter(tab, TMAX, r, c);
+                if(piece == 2)
+                {
+                    int up = info_case(tab, TMAX, r - 1, c);
+                    int down = info_case(tab, TMAX, r + 1, c);
+                    int right = info_case(tab, TMAX, r, c + 1);
+                    int left = info_case(tab, TMAX, r, c - 1);
+                    if(up == 0)
+                    {
+                        tab[r - 1][c] = 1;
+                        break;
+                    }
+                    if(down == 0)
+                    {
+                        tab[r + 1][c] = 1;
+                        break;
+                    }
+                    if(right == 0)
+                    {
+                        tab[r][c + 1] = 1;
+                        break;
+                    }
+                    if(left == 0)
+                    {
+                        tab[r][c - 1] = 1;
+                        break;
+                    }
+                    checkCapture(tab, TMAX, r, c);
+                }
+            }
+        }
+    }
 }
 
 
@@ -220,7 +295,7 @@ int pierreTriplet_liberter(int ** tab, int TMAX, int x, int y, int x2, int y2, i
     return liberter;
 }
 
-//Regarde/renvoie si la pierre est une pierre isolée ou non
+//Regarde renvoie si la pierre est une pierre isolée ou non
 int checkIfPierreIsoler(int ** tab, int TMAX, int x, int y){
     int nbLiberter = pierreIsoler_liberter(tab, TMAX, x, y);
     if (nbLiberter == 4)
@@ -244,14 +319,40 @@ int liberterPierreNonIsoler(int ** tab, int TMAX, int x, int y){
 void ProblemCreator(int ** tab, int TMAX){
     int r = 0;
     int c = 0;
-
-    int valeur;
+    int ** tableau = init_Board(TMAX);
+    int i = 0;
 
     for(r = 0; r < TMAX; r++)
     {
         for(c = 0; c < TMAX; c++)
         {
+            tab[r][c] = i;
+            i++;
+            if(i > 5)
+            {
+                i = 0;
+            }
+        }
+            
+    }
+
+
+    int valeur;
+
+    display(tab, TMAX);
+    printf("(Le tableau se remplis de gauche a droite ligne par ligne.)\n");
+    printf("(Toutes valeur entrez supérieur a 2 et inférieur a 0 seront par défauts initialiser a 0.)\n");
+    printf("Valeur des pièces: Les noir = 2   Les Blanc = 1    Case vide = 0\n");
+    printf("Entrez les valeur du tableau:\n");
+    for(r = 0; r < TMAX; r++)
+    {
+        for(c = 0; c < TMAX; c++)
+        {
             scanf("%d", &valeur);
+            if(valeur > 2 || valeur < 0)
+            {
+                valeur = 0;
+            }
             tab[r][c] = valeur;
         }
             
@@ -277,17 +378,19 @@ int main()
     int TMAX = init_BoardSize();
     int ** tab = init_Board(TMAX);
 
-    AjoutPierre(tab, 0, 3, "Noir");
-    AjoutPierre(tab, 1, 3, "Blanc");
-    AjoutPierre(tab, 2, 3, "Noir");
-    AjoutPierre(tab, 1, 4, "Noir");
+    // AjoutPierre(tab, 0, 3, "Noir");
+    // AjoutPierre(tab, 1, 3, "Blanc");
+    // AjoutPierre(tab, 2, 3, "Noir");
+    // AjoutPierre(tab, 1, 5, "Blanc");
+    // AjoutPierre(tab, 1, 4, "Noir");
 
-    //ProblemCreator(tab, TMAX);
+    ProblemCreator(tab, TMAX);
     //checkCapture(tab, TMAX, 1, 3);
 
     display(tab, TMAX);
     Solver(tab, TMAX);
     display(tab, TMAX);
+
     Calcule_Score(tab, TMAX);
     //pierreIsoler_liberter(tab, TMAX, 0, 0);
 
@@ -301,6 +404,6 @@ int main()
 
 //Pour la question la meilleur structure de données pour ce travail est ce l'ont moi le tableau a 2 dimension (array 2d/matrice 2d) qui permet de facilement gerer et créer un tableau ainsi  que gerer les pièces du jeux
 
-// Il ma manque la question 4 et 5 du projet celle de difficulter *** et j'ai fais celle de niveau * et **
+// Il ma manque la question 5 du projet celle de difficulter ***
 
 
