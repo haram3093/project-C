@@ -197,7 +197,7 @@ void Solver(int ** tab, int TMAX){
     int nbNoir = countPierre(tab, TMAX, 1);
     int nbBlanc = countPierre(tab, TMAX, 2);
 
-    if(nbNoir = nbBlanc || nbNoir < nbBlanc)
+    if(nbNoir == nbBlanc || nbNoir < nbBlanc)
     {
         for(r = 0; r < TMAX; r++)
         {
