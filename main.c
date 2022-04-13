@@ -214,24 +214,27 @@ void Solver(int ** tab, int TMAX){
                     if(up == 0 && r >= 0)
                     {
                         tab[r - 1][c] = 2;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     if(down == 0 && r <= TMAX)
                     {
                         tab[r + 1][c] = 2;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     if(right == 0 && c <= TMAX)
                     {
                         tab[r][c + 1] = 2;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     if(left == 0 && c >= 0)
                     {
                         tab[r][c - 1] = 2;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
-                    checkCapture(tab, TMAX, r, c);
                 }
             }
         }
@@ -254,21 +257,25 @@ void Solver(int ** tab, int TMAX){
                     if(up == 0)
                     {
                         tab[r - 1][c] = 1;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     if(down == 0)
                     {
                         tab[r + 1][c] = 1;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     if(right == 0)
                     {
                         tab[r][c + 1] = 1;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     if(left == 0)
                     {
                         tab[r][c - 1] = 1;
+                        checkCapture(tab, TMAX, r, c);
                         break;
                     }
                     checkCapture(tab, TMAX, r, c);
@@ -373,6 +380,7 @@ int main()
     Solver(tab, TMAX);
     printf("\n");
     display(tab, TMAX);
+
 
     Calcule_Score(tab, TMAX);
 
