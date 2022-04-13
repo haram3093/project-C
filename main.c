@@ -349,8 +349,8 @@ void ProblemCreator(int ** tab, int TMAX){
 
     display(tab, TMAX);
     printf("(Le tableau se remplis de gauche a droite ligne par ligne.)\n");
-    printf("(Toutes valeur entrez supérieur a 2 et inférieur a 0 seront par défauts initialiser a 0.)\n");
-    printf("Valeur des pièces: Les noir = 2   Les Blanc = 1    Case vide = 0\n");
+    printf("(Toutes valeur entrez superieur a 2 et inferieur a 0 seront par defauts initialiser a 0.)\n");
+    printf("Valeur des pieces: Les noir = 2   Les Blanc = 1    Case vide = 0\n");
     printf("Entrez les valeur du tableau:\n");
     for(r = 0; r < TMAX; r++)
     {
