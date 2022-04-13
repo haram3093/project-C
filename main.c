@@ -367,9 +367,11 @@ int main()
     int ** tab = init_Board(TMAX);
 
     ProblemCreator(tab, TMAX);
+    printf("\n");
 
     display(tab, TMAX);
     Solver(tab, TMAX);
+    printf("\n");
     display(tab, TMAX);
 
     Calcule_Score(tab, TMAX);
